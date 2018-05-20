@@ -13,7 +13,7 @@ import sklearn
 
 audiofile = 'IRMAS-TrainingData/pia/254__[pia][nod][cla]1406__2.wav'
 
-fp = FeaturePlan(sample_rate=16000)
+fp = FeaturePlan(sample_rate=44100)
 fp.addFeature('mfcc: MFCC blockSize=512 stepSize=256')
 fp.addFeature('mfcc_d1: MFCC blockSize=512 stepSize=256 > Derivate DOrder=1')
 fp.addFeature('mfcc_d2: MFCC blockSize=512 stepSize=256 > Derivate DOrder=2')
