@@ -6,11 +6,9 @@ Created on Wed May 16 08:47:24 2018
 @author: aidan
 """
 
-# import numpy as np
 from yaafelib import *
 import pyglet
 import sklearn
-
 from glob import glob
 
 wavFiles = []
@@ -46,11 +44,10 @@ for audiofile in wavFiles:
    
    feats = engine.readAllOutputs()
    
-   afp.setOutputFormat('csv','output_' + audiofile,{'Precision':'8'})
+   # first 5 data rows of csv are metadata
+   # 4th is label of feature
+   afp.setOutputFormat('csv','outputfeatures_' + audiofile,{'Precision':'8'})
    afp.processFile(engine,audiofile)
-   
-   # audio = np.random.randn(1,100000)
-   # feats = engine.processAudio(audio)
    
    #song = pyglet.media.load(str(audiofile))
    #song.play()
