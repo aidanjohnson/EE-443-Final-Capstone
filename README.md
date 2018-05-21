@@ -2,3 +2,4 @@
 - https://bitbucket.org/wcauchois/pysvmlight
 - http://yaafe.github.io/Yaafe/index.html
 - https://www.cs.cornell.edu/people/tj/svm_light/
+- https://github.com/cjlin1/libsvm
