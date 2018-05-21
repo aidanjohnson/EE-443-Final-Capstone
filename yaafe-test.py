@@ -6,7 +6,7 @@ Created on Wed May 16 08:47:24 2018
 @author: aidan
 """
 
-import numpy as np
+# import numpy as np
 from yaafelib import *
 import pyglet
 import sklearn
@@ -42,8 +42,8 @@ feats = engine.readAllOutputs()
 afp.setOutputFormat('csv','output',{'Precision':'8'})
 afp.processFile(engine,audiofile)
 
-audio = np.random.randn(1,100000)
-feats = engine.processAudio(audio)
+# audio = np.random.randn(1,100000)
+# feats = engine.processAudio(audio)
 
 song = pyglet.media.load(str(audiofile))
 song.play()
