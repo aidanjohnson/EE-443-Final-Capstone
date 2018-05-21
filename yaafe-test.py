@@ -11,7 +11,7 @@ from yaafelib import *
 import pyglet
 import sklearn
 
-audiofile = 'IRMAS-TrainingData/pia/254__[pia][nod][cla]1406__2.wav'
+audiofile = '05 Sonatine Bureaucratique_clip.wav'
 
 fp = FeaturePlan(sample_rate=44100)
 fp.loadFeaturePlan('featureplan.txt')
