@@ -2,25 +2,31 @@ import os
 import subprocess
 import yaafelib as yl
 
-def writeTrainFeatures(dataPath, featPath):
+
+def getInstruments(dataPath):
+    # Instruments to ignore
+    ignInstr = ['voi', 'gel', 'gac', 'pia', 'org', 'tru'] 
+    instrList = [n for n in os.listdir(dataPath) if not n.endswith('.txt') and n not in ignInstr]
+    instrIndex = dict(zip(instrList, range(len(instrList))))
+    return instrIndex
+
+
+def writeTrainFeatures(dataPath, featPath, instrIndex):
     
     featFile = open(featPath, 'w')
     featFile.write('             ') # Place holder for top line that is written last
     totalFrames = 0 # The total number of frames processed
-    instrList = [item for item in os.listdir(dataPath) if not item.endswith('.txt')]
-    instrIndex = dict(zip(instrList, range(len(instrList))))
-    limit = 100 # The number of audio files for each instrument that's used
+    limit = 60      # The number of audio files for each instrument that's used
 
-    for instr in instrList:
+    for instr in (fn for fn in instrIndex.keys() if not fn.endswith('.txt')):
 
         count = 0
         subStr = '[' + instr + ']' + '[nod]'
 
         for audioFile in (fn for fn in os.listdir(os.path.join(dataPath, instr)) if subStr in fn):
-
-            count += 1
-
             if (count < limit):
+
+                count += 1
 
                 # Get features
                 afp.processFile(eng, os.path.join(dataPath, instr, audioFile))
@@ -45,8 +51,6 @@ def writeTrainFeatures(dataPath, featPath):
     featFile.write('%d %d\n' % (totalFrames, dimensions + 1))
     featFile.close()
 
-    return instrIndex
-
 
 def writeTestFeatures(dataPath, featPath, instrIndex):
 
@@ -61,9 +65,10 @@ def writeTestFeatures(dataPath, featPath, instrIndex):
         filename = ".".join(subStr[0 : len(subStr) - 1])
         labelFile = open(os.path.join(dataPath, filename + '.txt'), 'r')
         label = labelFile.readline().strip()
-        otherInstr = labelFile.readline()
-        
-        if (not otherInstr.isspace() and label in instrIndex):
+        otherInstr = labelFile.readline().strip()
+        labelFile.close()
+
+        if (label in instrIndex and not otherInstr):
             
             # Get features
             afp.processFile(eng, os.path.join(dataPath, audioFile))
@@ -93,17 +98,20 @@ def writeTestFeatures(dataPath, featPath, instrIndex):
 
 # trainAudio = '/home/deniz/Documents/IRMAS/IRMAS-Sample/Training/'
 trainAudio = '/home/deniz/Documents/IRMAS/BinaryTrainingData/'
-trainFeats = './binaryModel/trainFeatures.dat'
+trainFeats = './BinaryModel/trainFeatures.dat'
 testAudio = '/home/deniz/Documents/IRMAS/TestingData/'
-testFeats = './binaryModel/testFeatures.dat'
-model = './binaryModel/model.svm'
+testFeats = './BinaryModel/testFeatures.dat'
+model = './BinaryModel/model.svm'
+
+# Get the instruments
+instruments = getInstruments(trainAudio)
 
 # Specify features
 fp = yl.FeaturePlan(sample_rate=44100)
 fp.addFeature('mfcc: MFCC blockSize=1024 stepSize=512 CepsNbCoeffs=13 FFTWindow=Hamming')
-fp.addFeature('lsf: LSF blockSize=1024 stepSize=512 LSFNbCoeffs=7')
+# fp.addFeature('lsf: LSF blockSize=1024 stepSize=512 LSFNbCoeffs=3')
 # Dimensions: mfcc +13, lsf +3, sss +4, tss +4
-dimensions = 20 # The sum of the dimensions of the features
+dimensions = 13 # The sum of the dimensions of the features
 
 # Initialize yaafe tools
 df = fp.getDataFlow()
@@ -113,16 +121,20 @@ afp = yl.AudioFileProcessor()
 
 # Write training features
 print('\nExtracting training features\n')
-instruments = writeTrainFeatures(trainAudio, trainFeats)
+writeTrainFeatures(trainAudio, trainFeats, instruments)
 
 # Train the svm 
 print('\nTraining SVM\n')
 subprocess.call(['./trainSVM', '-multi', trainFeats, model])
 
-# Write cross-validation features
+# Write the cross-validation features
 print('\nExtracting testing features\n')
 writeTestFeatures(testAudio, testFeats, instruments)
 
-# Cross-validate the model
-print('\nTesting SVM\n')
+# Test the svm on the cross-validation features
+print('\nTesting SVM on cross-validation features\n')
 subprocess.call(['./testSVM', '-multi', model, testFeats])
+
+# Test the svm on the training features
+print('\nTesting SVM on training features\n')
+subprocess.call(['./testSVM', '-multi', model, trainFeats])
