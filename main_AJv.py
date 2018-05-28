@@ -6,7 +6,7 @@ import yaafelib as yl
 def getInstruments(dataPath):
 
     # Include instruments from: cel, cla, flu, gac, gel, org, pia, sax, tru, vio
-    instrList = ['cel', 'sax']
+    instrList = ['cel', 'sax', 'cla', 'vio', 'flu', 'gac', 'gel', 'org', 'pia', 'tru']
 
     # Return instruments and class numbers
     return dict(zip(instrList, range(len(instrList))))
@@ -36,6 +36,8 @@ def writeFeatures(dataPath, featPath, instrIndex):
             # Write features
             for frInd in range(numFrames):
                 for feat in featList:
+                    if frInd >= len(feats.get(feat)):
+                        break
                     for val in feats.get(feat)[frInd]:
                         featFile.write('%.8f ' % val)
                 
@@ -55,9 +57,9 @@ def writeFeatures(dataPath, featPath, instrIndex):
 
 
 # Main
-trainAudio = './IRMAS-DataNonRand/Training'
+trainAudio = './IRMAS-Data/Training'
 trainFeats = './trainFeatures.dat'
-testAudio = './IRMAS-DataNonRand/Testing'
+testAudio = './IRMAS-Data/Testing'
 testFeats = './testFeatures.dat'
 model = './model.svm'
 
@@ -76,9 +78,9 @@ df = fp.getDataFlow()
 eng = yl.Engine()
 eng.load(df)
 dimensions = 0 # The sum of the dimensions of the features
-feats = eng.getOutputs().items()
-for feat in feats:
-    dimensions += int(feat[1]['size'])
+ftSizes = eng.getOutputs().items()
+for ftSize in ftSizes:
+    dimensions += int(ftSize[1]['size'])
 afp = yl.AudioFileProcessor()
 
 # Remove previous model files
