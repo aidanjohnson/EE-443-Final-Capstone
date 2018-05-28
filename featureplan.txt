@@ -2,3 +2,13 @@ mfcc: MFCC
 am: AmplitudeModulation
 sss: SpectralShapeStatistics
 odf: OnsetDetectionFunction
+zcr: ZCR
+ss: SpectralSlope
+sv: SpectralVariation
+lpc: LPC
+lsf: LSF
+obsir: OBSIR
+scpb: SpectralCrestFactorPerBand
+sd: SpectralDecrease
+sfpb: SpectralFlatnessPerBand
+si: SpectralIrregularity

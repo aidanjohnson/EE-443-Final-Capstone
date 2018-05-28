@@ -6,13 +6,12 @@ import yaafelib as yl
 def getInstruments(dataPath):
 
     # Include instruments from: cel, cla, flu, gac, gel, org, pia, sax, tru, vio
-    instrList = ['cel', 'sax', 'cla', 'vio', 'flu', 'gel', 'org', 'tru']
+    instrList = ['cel', 'sax', 'cla', 'flu', 'vio']
 
     # Return instruments and class numbers
     return dict(zip(instrList, range(len(instrList))))
     
 def writeFeatures(dataPath, featPath, instrIndex):
-    
     featFile = open(featPath, 'w')
     featFile.write('             ') # Place holder for top line that is written last
     totalFrames = 0 # The total number of frames processed
@@ -20,7 +19,8 @@ def writeFeatures(dataPath, featPath, instrIndex):
 
     for instr in (fn for fn in instrIndex.keys() if not fn.endswith('.txt')):
 
-        subStr = '[' + instr + ']'
+        subStr = '[' + instr + ']' + '[nod]'
+        # subStr = '[' + instr + ']'
 
         for audioFile in (fn for fn in os.listdir(os.path.join(dataPath, instr)) if subStr in fn):
 
