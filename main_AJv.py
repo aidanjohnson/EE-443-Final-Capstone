@@ -6,7 +6,7 @@ import yaafelib as yl
 def getInstruments(dataPath):
 
     # Include instruments from: cel, cla, flu, gac, gel, org, pia, sax, tru, vio
-    instrList = ['cel', 'sax', 'cla', 'vio', 'flu', 'gac', 'gel', 'org', 'pia', 'tru']
+    instrList = ['cel', 'sax', 'cla', 'vio', 'flu', 'gel', 'org', 'tru']
 
     # Return instruments and class numbers
     return dict(zip(instrList, range(len(instrList))))
@@ -36,8 +36,8 @@ def writeFeatures(dataPath, featPath, instrIndex):
             # Write features
             for frInd in range(numFrames):
                 for feat in featList:
-#                     if frInd >= len(feats.get(feat)):
-#                         break
+                    if frInd >= len(feats.get(feat)):
+                        break
                     for val in feats.get(feat)[frInd]:
                         featFile.write('%.8f ' % val)
                 
@@ -57,9 +57,9 @@ def writeFeatures(dataPath, featPath, instrIndex):
 
 
 # Main
-trainAudio = './IRMAS-Data/Training'
+trainAudio = './IRMAS-Dataset/Training'
 trainFeats = './trainFeatures.dat'
-testAudio = './IRMAS-Data/Testing'
+testAudio = './IRMAS-Dataset/Testing'
 testFeats = './testFeatures.dat'
 model = './model.svm'
 
@@ -69,9 +69,6 @@ instruments = getInstruments(trainAudio)
 # Specify features
 fp = yl.FeaturePlan(sample_rate=44100)
 fp.loadFeaturePlan('featureplan.txt')
-# fp.addFeature('mfcc: MFCC CepsNbCoeffs=13 FFTWindow=Hamming')
-# fp.addFeature('sss: SpectralShapeStatistics FFTWindow=Hamming')
-# fp.addFeature('obsi: OBSI blockSize=1024 stepSize=512 FFTWindow=Hamming')
 
 # Initialize yaafe tools
 df = fp.getDataFlow()

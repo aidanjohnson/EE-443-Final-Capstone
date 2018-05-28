@@ -2,4 +2,3 @@ mfcc: MFCC
 am: AmplitudeModulation
 sss: SpectralShapeStatistics
 odf: OnsetDetectionFunction
-ess: EnvelopeShapeStatistics
