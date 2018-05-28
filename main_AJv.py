@@ -6,7 +6,7 @@ import yaafelib as yl
 def getInstruments(dataPath):
 
     # Include instruments from: cel, cla, flu, gac, gel, org, pia, sax, tru, vio
-    instrList = ['cel', 'cla', 'flu', 'gac', 'gel', 'org', 'pia', 'sax', 'tru', 'vio']
+    instrList = ['cel', 'sax']
 
     # Return instruments and class numbers
     return dict(zip(instrList, range(len(instrList))))
@@ -23,8 +23,6 @@ def writeFeatures(dataPath, featPath, instrIndex):
         subStr = '[' + instr + ']'
 
         for audioFile in (fn for fn in os.listdir(os.path.join(dataPath, instr)) if subStr in fn):
-
-
 
             # Get features
             afp.processFile(eng, os.path.join(dataPath, instr, audioFile))
@@ -57,10 +55,9 @@ def writeFeatures(dataPath, featPath, instrIndex):
 
 
 # Main
-
-trainAudio = './IRMAS-Data/Training'
+trainAudio = './IRMAS-DataNonRand/Training'
 trainFeats = './trainFeatures.dat'
-testAudio = './IRMAS-Data/Testing'
+testAudio = './IRMAS-DataNonRand/Testing'
 testFeats = './testFeatures.dat'
 model = './model.svm'
 
@@ -69,16 +66,19 @@ instruments = getInstruments(trainAudio)
 
 # Specify features
 fp = yl.FeaturePlan(sample_rate=44100)
-fp.addFeature('mfcc: MFCC CepsNbCoeffs=13 FFTWindow=Hamming')
-fp.addFeature('sss: SpectralShapeStatistics FFTWindow=Hamming')
+fp.loadFeaturePlan('featureplan.txt')
+# fp.addFeature('mfcc: MFCC CepsNbCoeffs=13 FFTWindow=Hamming')
+# fp.addFeature('sss: SpectralShapeStatistics FFTWindow=Hamming')
 # fp.addFeature('obsi: OBSI blockSize=1024 stepSize=512 FFTWindow=Hamming')
-# Dimensions: mfcc +13, sss +4, obsi +10
-dimensions = 17 # The sum of the dimensions of the features
 
 # Initialize yaafe tools
 df = fp.getDataFlow()
 eng = yl.Engine()
 eng.load(df)
+dimensions = 0 # The sum of the dimensions of the features
+feats = eng.getOutputs().items()
+for feat in feats:
+    dimensions += int(feat[1]['size'])
 afp = yl.AudioFileProcessor()
 
 # Remove previous model files
