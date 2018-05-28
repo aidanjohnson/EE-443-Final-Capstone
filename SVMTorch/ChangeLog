@@ -1,0 +1,37 @@
+Changes between version II 1.07 and the old version 3.07
+--------------------------------------------------------
+
++ The code is completly rewritten in C++. It's cleaner
+  and optimized for a chunk of size 2.
++ Options are a little bit different.
++ The optimality check is now similar to SMO. (Faster)
+  Note that this optimality check is stronger that the older one.
+  (see for example ftp://ftp.idiap.ch/pub/reports/2000/rr00-24.ps.gz)
+
++ The sparse file format and binary file format are different.
+  Please check the manual.
+	
++ A converter is available to convert files from the old format to the new one.
++ No more HACK option.
++ The output of the test program in multiclass mode is different.
+	
+Changes since version 2.08 :
+---------------------------
+
++ Unshrink is supported
+
+Changes since version 2.07 :
+---------------------------
+
++ The number of false positives and false negatives are now correct
+  (they were swapped in the previous version)
+
+Changes since version 1.07 :
+---------------------------
+
++ Multiclass mode added. (One class against the others).
++ Now there is a sparse mode. (It runs faster on sparse data).
+  Consequently, there is a sparse file format.
++ HACK option has been introduced. It prints some additionnal
+  messages during the learning phase.
++ Few bugs fixed.

@@ -1,0 +1,63 @@
+SVMTorch
+---------
+
+Available at http://www.idiap.ch/learning/SVMTorch.html
+
+Author: Ronan Collobert
+
+        collober@iro.umontreal.ca
+        Universite de Montreal
+
+        or
+
+        collober@idiap.ch
+
+        IDIAP
+        CP 592, rue du Simplon 4
+        1920 Martigny
+        Switzerland
+
+
+LICENSING TERMS 
+
+This program is granted free of charge for research and education
+purposes. However you must obtain a license from the author to use it
+for commercial purposes.
+
+Scientific results produced using the software provided shall
+acknowledge the use of SVMTorch. Please cite as  
+
+       R. Collobert and S. Bengio. Support Vector Machines for 
+       Large-Scale Regression Problems. Journal of Machine Learning
+       Research, vol 1, pp 143-160, 2001.
+
+Moreover shall the author of SVMTorch be informed about the
+publication.
+
+The software must not be modified and distributed without prior
+permission of the author.
+
+By using SVMTorch you agree to the licensing terms.
+
+
+NO WARRANTY 
+
+BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT
+WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER
+PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND,
+EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
+PROGRAM IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME
+THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+REDISTRIBUTE THE PROGRAM, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
+GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF
+THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO
+LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY
+YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY
+OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGES.
