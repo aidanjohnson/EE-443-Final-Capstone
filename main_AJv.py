@@ -36,8 +36,6 @@ def writeFeatures(dataPath, featPath, instrIndex):
             # Write features
             for frInd in range(numFrames):
                 for feat in featList:
-                    if frInd >= len(feats.get(feat)):
-                        break
                     for val in feats.get(feat)[frInd]:
                         featFile.write('%.8f ' % val)
                 
