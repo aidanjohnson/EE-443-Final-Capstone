@@ -1,0 +1,140 @@
+Number of training files used: {'flu': 27, 'vio': 120, 'cel': 77, 'sax': 82, 'cla': 82}
+
+Number of testing files used: {'flu': 8, 'vio': 41, 'cel': 40, 'sax': 35, 'cla': 37}
+
+
+Testing SVM on cross-validation features
+
+# Loading data :
+  1449 test examples
+  input dimension is 204
+# Starting test...
+# Scanning for classes...5 found
+
+# Testing class 0
+# Precalculating...OK
+# 1324 support vectors in the model
+# Classification mode
+                    [________Test________]
+                    [####################]
+
+# Testing class 1
+# Precalculating...OK
+# 1632 support vectors in the model
+# Classification mode
+                    [________Test________]
+                    [####################]
+
+# Testing class 2
+# Precalculating...OK
+# 1448 support vectors in the model
+# Classification mode
+                    [________Test________]
+                    [####################]
+
+# Testing class 3
+# Precalculating...OK
+# 1058 support vectors in the model
+# Classification mode
+                    [________Test________]
+                    [####################]
+
+# Testing class 4
+# Precalculating...OK
+# 1801 support vectors in the model
+# Classification mode
+                    [________Test________]
+                    [####################]
+
+# Number of missclassified for each class:
+  + For class    0                  : 232 [16.01%]
+     -> False positives             : 60
+     -> False negatives             : 172
+
+  + For class    1                  : 184 [12.7%]
+     -> False positives             : 62
+     -> False negatives             : 122
+
+  + For class    2                  : 217 [14.98%]
+     -> False positives             : 33
+     -> False negatives             : 184
+
+  + For class    3                  : 68 [4.693%]
+     -> False positives             : 8
+     -> False negatives             : 60
+
+  + For class    4                  : 257 [17.74%]
+     -> False positives             : 141
+     -> False negatives             : 116
+
+
+# With multiclass: 498 missclassified [34.37%] on 1449 examples
+
+
+
+Testing SVM on training features
+
+# Loading data :
+  3492 test examples
+  input dimension is 204
+# Starting test...
+# Scanning for classes...5 found
+
+# Testing class 0
+# Precalculating...OK
+# 1324 support vectors in the model
+# Classification mode
+                    [________Test________]
+                    [####################]
+
+# Testing class 1
+# Precalculating...OK
+# 1632 support vectors in the model
+# Classification mode
+                    [________Test________]
+                    [####################]
+
+# Testing class 2
+# Precalculating...OK
+# 1448 support vectors in the model
+# Classification mode
+                    [________Test________]
+                    [####################]
+
+# Testing class 3
+# Precalculating...OK
+# 1058 support vectors in the model
+# Classification mode
+                    [________Test________]
+                    [####################]
+
+# Testing class 4
+# Precalculating...OK
+# 1801 support vectors in the model
+# Classification mode
+                    [________Test________]
+                    [####################]
+
+# Number of missclassified for each class:
+  + For class    0                  : 0 [0%]
+     -> False positives             : 0
+     -> False negatives             : 0
+
+  + For class    1                  : 0 [0%]
+     -> False positives             : 0
+     -> False negatives             : 0
+
+  + For class    2                  : 0 [0%]
+     -> False positives             : 0
+     -> False negatives             : 0
+
+  + For class    3                  : 0 [0%]
+     -> False positives             : 0
+     -> False negatives             : 0
+
+  + For class    4                  : 0 [0%]
+     -> False positives             : 0
+     -> False negatives             : 0
+
+
+# With multiclass: 0 missclassified [0%] on 3492 examples
