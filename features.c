@@ -46,7 +46,7 @@ double moment(double* mag, int n)
 	double num, den;
 
 	int k;
-	for (k = 0; k < 1024; k++) {
+	for (k = 0; k < N; k++) {
 		num += pow(k, n) * mag[k];
 		den += mag[k];
 	}
