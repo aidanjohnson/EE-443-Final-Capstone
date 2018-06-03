@@ -5,10 +5,8 @@
 #include "libmfcc.h"
 #include <math.h>
 
-void shapeStatistics(double *stat, double *mag);
-
 #define BUFFERSIZE 512
-//int M=BUFFERSIZE;
+int M=BUFFERSIZE;
 int kk=0;
 int startflag = 0;
 int training = 1;
@@ -69,8 +67,8 @@ int main()
 
 			// Remove bias (DC offset)
 			avg = 0;
-			for(mm=0; mm < BUFFERSIZE; mm++){
-				avg = avg + X[mm];
+			for(mm = 0; mm < BUFFERSIZE; mm++){
+				avg += X[mm];
 			}
 
 			// Measure the magnitude of the input to find starting point
@@ -83,7 +81,7 @@ int main()
 			if(magnitude > 30000) {
 
 				// Eliminate bias
-				for(ll=0; ll<BUFFERSIZE; ll++){
+				for(ll = 0; ll < BUFFERSIZE; ll++){
 					B[ll].real = X[ll] - avg;
 					B[ll].imag = 0;
 				}
@@ -98,7 +96,7 @@ int main()
 
 				// Get the MFCC
 				for (ii = 0; ii < 13; ii++) {
-					mfcc[ii] = GetCoefficient(spectralData, 48000, 48, BUFFERSIZE, ii);
+					feats[ii] = GetCoefficient(spectralData, 48000, 48, BUFFERSIZE, ii);
 				}
 
 				// Get the spectral shape statistics
@@ -107,7 +105,7 @@ int main()
 
 				// Get the first four raw moments
 				int n, k;
-				for (n = 0; n < 4; n++) {
+				for (n = 1; n <= 4; n++) {
 					num = 0.0;
 					den = 0.0;
 					for (k = 0; k < 512; k++) {
@@ -118,19 +116,14 @@ int main()
 				}
 
 				// Get the first four moments
-				sss[0] = mu[0];
-				sss[1] = sqrt(mu[1] - mu[0]*mu[0]);
-				sss[2] = (2*mu[0]*mu[0]*mu[0] - 3*mu[0]*mu[1] + mu[2])/(sss[1]*sss[1]*sss[1]);
-				sss[3] = (-3*mu[0]*mu[0]*mu[0]*mu[0] + 6*mu[0]*mu[1] - 4*mu[0]*mu[2] + mu[3])/(sss[1]*sss[1]*sss[1]*sss[1]) - 3;
+				feats[13] = mu[0];
+				feats[14] = sqrt(mu[1] - mu[0]*mu[0]);
+				feats[15] = (2*mu[0]*mu[0]*mu[0] - 3*mu[0]*mu[1] + mu[2])/(sss[1]*sss[1]*sss[1]);
+				feats[16] = (-3*mu[0]*mu[0]*mu[0]*mu[0] + 6*mu[0]*mu[1] - 4*mu[0]*mu[2] + mu[3])/(sss[1]*sss[1]*sss[1]*sss[1]) - 3;
 
-				// Combine features into a single feature vector
+				// Display features
 				printf("Features: ");
 				for (ii = 0; ii < 17; ii++) {
-					if (ii < 13) {
-						feats[ii] = mfcc[ii];
-					} else {
-						feats[ii] = sss[ii];
-					}
 					printf("%.4f ", feats[ii]);
 				}
 				printf("\n");
