@@ -21,7 +21,6 @@ float avg = 0;
 int coeff=0;
 double spectrum[BUFFERSIZE];
 double mfcc[13];
-double sss[4];
 double feats[17];
 float llh;
 
@@ -100,31 +99,39 @@ int main()
 				}
 
 				// Get the spectral shape statistics
-				double den, num;
-				double mu[4];
+				double dataSum = 0.0;
+				double mu[4] = {0.0, 0.0, 0.0, 0.0};
 
 				// Get the first four raw moments
-				int n, k;
-				for (n = 1; n <= 4; n++) {
-					num = 0.0;
-					den = 0.0;
-					for (k = 0; k < 512; k++) {
-						num += pow(k, n) * spectralData[k];
-						den += spectralData[k];
-					}
-					mu[n] = num/den;
+				int k = 0;
+				for (k = 0; k < 512; k++) {
+					double v = abs(spectralData[k]);
+					dataSum += v;
+					v *= k;
+					mu[0] += v;
+					v *= k;
+					mu[1] += v;
+					v *= k;
+					mu[2] += v;
+					v *= k;
+					mu[3] += v;
 				}
+				mu[0] = mu[0]/dataSum; // 1st momment
+				mu[1] = mu[1]/dataSum; // 2nd momment
+				mu[2] = mu[2]/dataSum; // 3rd momment
+				mu[3] = mu[3]/dataSum; // 4th momment
 
-				// Get the first four moments
-				feats[13] = mu[0];
-				feats[14] = sqrt(mu[1] - mu[0]*mu[0]);
-				feats[15] = (2*mu[0]*mu[0]*mu[0] - 3*mu[0]*mu[1] + mu[2])/(sss[1]*sss[1]*sss[1]);
-				feats[16] = (-3*mu[0]*mu[0]*mu[0]*mu[0] + 6*mu[0]*mu[1] - 4*mu[0]*mu[2] + mu[3])/(sss[1]*sss[1]*sss[1]*sss[1]) - 3;
+				printf("momments: %f, %f, %f, %f /n",  mu[0], mu[1], mu[2], mu[3]);
+
+				feats[13] = mu[0]; // centroid
+				feats[14] = sqrt(mu[1] - pow(mu[0], 2)); // spread
+				feats[15] = (2 * pow(mu[0], 3) - 3 * mu[0] * mu[1] + mu[2])/pow(feats[14], 3); // skewness
+				feats[16] = (-3 * pow(mu[0], 4) - 4 * mu[0] * mu[2] + mu[3])/pow(feats[14], 4) - 3; // kurtosis
 
 				// Display features
 				printf("Features: ");
 				for (ii = 0; ii < 17; ii++) {
-					printf("%.4f ", feats[ii]);
+					printf("%f ", feats[ii]);
 				}
 				printf("\n");
 
