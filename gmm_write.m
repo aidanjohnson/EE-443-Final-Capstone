@@ -1,8 +1,4 @@
-close all; clear all;
-% delete(instrfindall);
-% s = serial('COM1', 'BaudRate',115200);
-% set(s,'InputBufferSize',4);
-% fopen(s);
+clear all;
 
 load('GMModel.mat');
 
