@@ -3,21 +3,41 @@
 % Class 2: violin
 
 clear all;
+len = 512;
+numFilter = 48;
+numCoeff = 13;
 
-data = importdata('training.dat');
-[samps, dims] = size(data);
-nc = 3; % Number of classes
+feats = [];
+audioFile = dir('*.wav'); 
+mfcc = zeros(1, numCoeff);
+sss = zeros(1, 4);
+for k = 1:length(audioFiles)
+  
+  % Process file
+  filename = myFiles(k).name;
+  fprintf(1, 'Now reading %s\n', filename);
+  [audio, fs] = audioread(filename);
+  
+  % Compute fft and mfcc for each frames
+  for n = 1:floor(length(audio)/len)
+     frame = audio((n - 1)*len + 1: n*len);
+     mag = abs(fft(frame));
+     
+     % MFCC
+     for m = 1:numCoeff
+        mfcc(m) = GetCoefficient(mag, fs, 48, len, m);
+     end
+     
+     % Shape statistics
+     sss = GetShapeStatistics(mag);
+     
+     feats = [feats; [mfcc, sss]];
+  end
+end
 
-classes = data(:, dims);
-% idx = [sum(classes == 0), sum(classes == 1), sum(classes == 2)];
-idx = sum(repmat(classes, 1, nc) == 0:nc - 1);
-cel = data(1 : idx(1), 1:dims - 1);
-sax = data(idx(1) + 1 : sum(idx(1:2)), 1:dims - 1);
-vio = data(sum(idx(1:2)) + 1 : sum(idx), 1:dims - 1);
+save('features.dat', 'feats');
 
-trainData = data(:, dims - 1);
-GMModel = fitgmdist(dims, nc);
+nc = 3;
+GMModel = fitgmdist(trainData, nc);
 
 save('GMModel.mat', 'GMModel');
-
-
