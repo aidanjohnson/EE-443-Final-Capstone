@@ -31,7 +31,7 @@ extern int startflag;
 extern int kk;
 extern int M;
 
-extern short X[1024];
+extern short X[512];
 
 interrupt void Codec_ISR()
 ///////////////////////////////////////////////////////////////////////

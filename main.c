@@ -4,10 +4,10 @@
 #include "gmm.h"
 #include "libmfcc.h"
 #include <math.h>
-#include "features.h"
+//#include "features.h"
 
-#define BUFFERSIZE 1024
-int M=BUFFERSIZE;
+#define BUFFERSIZE 512
+//int M=BUFFERSIZE;
 int kk=0;
 int startflag = 0;
 int training = 1;
@@ -22,13 +22,13 @@ float avg = 0;
 int coeff=0;
 double spectrum[BUFFERSIZE];
 double mfcc[13];
-double *sss;
+double sss[4];
 double feats[17];
 float llh;
 
-double weights[3] = {0.33363005,0.49528663,0.17108333};
-double means[51] = {2.29714624,-0.46984484,0.47660914,-0.32027861,-0.17388577,-0.21813227,-0.04568859,-0.09759609,-0.08454685,-0.03303321,0.03034760,-0.02713213,0.07924577,56.09046496,71.17555198,2.82405274,3.00807476,3.62933477,-0.33285165,0.69907121,-0.09367394,-0.06603198,-0.18683111,-0.02273308,-0.07654318,-0.10898050,-0.12647405,-0.07157140,-0.11925906,-0.03874968,35.61909844,54.21336795,4.09823706,18.37054612,4.85423335,-0.40543869,0.62351327,-0.23289740,-0.11255583,-0.20642021,-0.16982797,-0.14830839,-0.14771997,-0.10197164,-0.04251470,-0.09897561,0.00543935,23.70044223,37.79146474,6.28980612,52.57300572};
-double covars[51] = {0.84875131,0.54540867,0.32973933,0.20418287,0.24063123,0.22618938,0.21946397,0.26370630,0.26671025,0.31496457,0.31107896,0.30793353,0.27373178,172.22349796,306.23727274,0.48076357,57.22554751,0.49993913,0.29117162,0.19743981,0.16691678,0.12141554,0.11483228,0.12981453,0.11895683,0.12166940,0.13401627,0.12694267,0.13109478,0.13461637,57.06804518,84.98613898,0.71991817,94.23336426,0.64083104,0.58378049,0.24803646,0.18978901,0.14482897,0.10113280,0.16910565,0.13068864,0.14154063,0.12612072,0.12279887,0.14034926,0.16337058,30.47268890,44.44756892,2.18066400,854.49129325};
+double weights[3] = {0.18265455,0.36151545,0.45582999};
+double means[51] = {7.99306564,-2.66702059,-0.14877771,-1.00729928,-1.02711138,-0.99235752,-0.42483802,-0.45255147,-0.44734024,-0.68264314,-0.57969104,-0.35151826,-0.05523575,1.41419278,26.15998507,21.16914388,530.01064269,10.22199728,-0.48712182,1.32295514,0.23260397,0.04280672,-0.11080689,0.22418082,0.10415348,0.07511782,-0.25841487,-0.24341097,-0.06786570,0.07683761,20.38074130,95.68356965,5.30047136,27.84591123,9.50356950,-1.51778351,0.63740513,-0.36557562,-0.57934880,-0.61998910,-0.19899423,-0.31132668,-0.28693674,-0.52401222,-0.47002261,-0.26612398,-0.02869980,5.02158946,49.64112728,10.46072146,111.31037329};
+double covars[51] = {5.80985953,2.75584264,1.29991573,0.92305431,0.80314060,0.74409226,0.73704814,0.77592255,0.72105652,0.60392618,0.61592461,0.69576200,0.67593837,0.33580073,37.38614191,83.88288650,3595144.46585853,3.89782447,2.59043282,1.05381713,0.68500870,0.66376731,0.59263296,0.50173277,0.50840194,0.49311974,0.45344310,0.48578981,0.48693036,0.44304774,180.55295670,683.66647300,2.00824405,212.07152715,4.12934739,2.76961048,1.11924008,0.80723114,0.67563516,0.58491213,0.56085110,0.59523182,0.56296153,0.49564159,0.53546170,0.53183538,0.52366893,3.15143528,78.44448915,3.93189659,1856.57314796};
 GMM gmm[1]; // create GMM model
 
 int main()
@@ -65,12 +65,14 @@ int main()
 	// main stalls here, interrupts drive operation
 	while(1) {
 		if(startflag){
+
 			// Remove bias (DC offset)
 			avg = 0;
 			for(mm=0; mm < BUFFERSIZE; mm++){
 				avg = avg + X[mm];
 			}
-			// Measure the Magnitude of the input to find starting point
+
+			// Measure the magnitude of the input to find starting point
 			avg = avg/BUFFERSIZE;
 			magnitude = 0;
 			for(mm=0; mm < BUFFERSIZE; mm++){
@@ -79,33 +81,39 @@ int main()
 
 			if(magnitude > 30000) {
 
-				for(ll=0; ll<M; ll++){
-					B[ll].real = X[ll]-avg;
+				// Eliminate bias
+				for(ll=0; ll<BUFFERSIZE; ll++){
+					B[ll].real = X[ll] - avg;
 					B[ll].imag = 0;
 				}
-				// (P3). FFT: B is input and output, w is twiddle factors
+
+				// Get the short-time fourier transform
 				fft(B, BUFFERSIZE, w);
 
+				// Get the magnitude of the FFT
 				for (ii = 0; ii < BUFFERSIZE; ii++) {
-					spectralData[ii] = sqrt(B[ii].real*B[ii].real+B[ii].imag*B[ii].imag);
+					spectralData[ii] = sqrt(B[ii].real*B[ii].real + B[ii].imag*B[ii].imag);
 				}
 
-				// (P3). Find 13 MFCC coefficients
-				for (ii = 0; ii < 17; ii++) {
-					mfcc[ii] = GetCoefficient(spectralData, 12000, 48, BUFFERSIZE, ii);
+				// Get the MFCC
+				for (ii = 0; ii < 13; ii++) {
+					mfcc[ii] = GetCoefficient(spectralData, 48000, 48, BUFFERSIZE, ii);
 				}
 
 				// Get the spectral shape statistics
-				sss = spectralShapeStatistics(spectralData);
+				shapeStatistics(sss, spectralData);
 
 				// Combine features into a single feature vector
+				printf("Features: ");
 				for (ii = 0; ii < 17; ii++) {
 					if (ii < 13) {
 						feats[ii] = mfcc[ii];
 					} else {
 						feats[ii] = sss[ii];
 					}
+					printf("%.4f ", feats[ii]);
 				}
+				printf("\n");
 
 				llh = gmm_score(gmm, feats, 1);
 			}
@@ -113,3 +121,27 @@ int main()
 		}
 	}
 }
+
+void shapeStatistics(double *stat, double *mag)
+{
+	double den, num;
+	double mu[4];
+
+	// Get the numerator of the nth raw moment
+	int n, k;
+	for (n = 0; n < 4; n++) {
+		num = 0.0;
+		den = 0.0;
+		for (k = 0; k < 512; k++) {
+			num += pow(k, n) * mag[k];
+			den += mag[k];
+		}
+		mu[n] = num/den;
+	}
+
+	stat[0] = mu[0];
+	stat[1] = sqrt(mu[1] - mu[0]*mu[0]);
+	stat[2] = (2*mu[0]*mu[0]*mu[0] - 3*mu[0]*mu[1] + mu[2])/(stat[1]*stat[1]*stat[1]);
+	stat[3] = (-3*mu[0]*mu[0]*mu[0]*mu[0] + 6*mu[0]*mu[1] - 4*mu[0]*mu[2] + mu[3])/(stat[1]*stat[1]*stat[1]*stat[1]) - 3;
+}
+
