@@ -22,6 +22,8 @@ float avg = 0;
 int coeff=0;
 double spectrum[BUFFERSIZE];
 double mfcc[13];
+double sss[4];
+double feats[17];
 float llh;
 
 double weights[3] = {0.33363005,0.49528663,0.17108333};
@@ -95,7 +97,19 @@ int main()
 					mfcc[ii] = GetCoefficient(spectralData, 12000, 48, BUFFERSIZE, ii);
 				}
 
-				llh = gmm_score(gmm, mfcc, 1);
+				// Get the spectral shape statistics
+				sss = spectralShapeStatistics(spectralData);
+
+				// Combine features into a single feature vector
+				for (ii = 0; ii < 17; ii++) {
+					if (ii < 13) {
+						feats[ii] = mfcc[ii];
+					} else {
+						feats[ii] = sss[ii];
+					}
+				}
+
+				llh = gmm_score(gmm, feats, 1);
 			}
 			startflag = 0;
 		}
