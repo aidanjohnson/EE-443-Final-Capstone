@@ -22,7 +22,7 @@ float avg = 0;
 int coeff=0;
 double spectrum[BUFFERSIZE];
 double mfcc[13];
-double sss[4];
+double *sss;
 double feats[17];
 float llh;
 
@@ -55,7 +55,6 @@ int main()
 	for (ii=0; ii < 51; ii++) {
 		gmm->covars[ii] = covars[ii];
 	}
-	printf("model saved \n");
 
 	// Twiddle factor
 	for(ii=0; ii < BUFFERSIZE; ii++) {
@@ -83,7 +82,6 @@ int main()
 				for(ll=0; ll<M; ll++){
 					B[ll].real = X[ll]-avg;
 					B[ll].imag = 0;
-					//printf("%lf\n",B[ll].real);
 				}
 				// (P3). FFT: B is input and output, w is twiddle factors
 				fft(B, BUFFERSIZE, w);

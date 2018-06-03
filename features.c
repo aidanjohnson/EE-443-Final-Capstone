@@ -5,6 +5,7 @@
  */
 
 #include <math.h>
+#include "features.h"
 
 #define N 1024;
 
@@ -19,7 +20,7 @@ double *spectralShapeStatistics(double *mag)
 	// Get the first four raw moments
 	double mu[4];
 	for (k = 0; k < 4; k++) {
-		mu[k] = moment(mag, k);
+		mu[k] = moment(mag, k + 1);
 	}
 
 	// Centroid
@@ -45,7 +46,7 @@ double moment(double* mag, int n)
 	double num, den;
 
 	int k;
-	for (k = 0; k < (int)N; k++) {
+	for (k = 0; k < 1024; k++) {
 		num += pow(k, n) * mag[k];
 		den += mag[k];
 	}
