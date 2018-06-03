@@ -4,7 +4,8 @@
 #include "gmm.h"
 #include "libmfcc.h"
 #include <math.h>
-//#include "features.h"
+
+void shapeStatistics(double *stat, double *mag);
 
 #define BUFFERSIZE 512
 //int M=BUFFERSIZE;
@@ -101,7 +102,26 @@ int main()
 				}
 
 				// Get the spectral shape statistics
-				shapeStatistics(sss, spectralData);
+				double den, num;
+				double mu[4];
+
+				// Get the first four raw moments
+				int n, k;
+				for (n = 0; n < 4; n++) {
+					num = 0.0;
+					den = 0.0;
+					for (k = 0; k < 512; k++) {
+						num += pow(k, n) * spectralData[k];
+						den += spectralData[k];
+					}
+					mu[n] = num/den;
+				}
+
+				// Get the first four moments
+				sss[0] = mu[0];
+				sss[1] = sqrt(mu[1] - mu[0]*mu[0]);
+				sss[2] = (2*mu[0]*mu[0]*mu[0] - 3*mu[0]*mu[1] + mu[2])/(sss[1]*sss[1]*sss[1]);
+				sss[3] = (-3*mu[0]*mu[0]*mu[0]*mu[0] + 6*mu[0]*mu[1] - 4*mu[0]*mu[2] + mu[3])/(sss[1]*sss[1]*sss[1]*sss[1]) - 3;
 
 				// Combine features into a single feature vector
 				printf("Features: ");
@@ -122,26 +142,4 @@ int main()
 	}
 }
 
-void shapeStatistics(double *stat, double *mag)
-{
-	double den, num;
-	double mu[4];
-
-	// Get the numerator of the nth raw moment
-	int n, k;
-	for (n = 0; n < 4; n++) {
-		num = 0.0;
-		den = 0.0;
-		for (k = 0; k < 512; k++) {
-			num += pow(k, n) * mag[k];
-			den += mag[k];
-		}
-		mu[n] = num/den;
-	}
-
-	stat[0] = mu[0];
-	stat[1] = sqrt(mu[1] - mu[0]*mu[0]);
-	stat[2] = (2*mu[0]*mu[0]*mu[0] - 3*mu[0]*mu[1] + mu[2])/(stat[1]*stat[1]*stat[1]);
-	stat[3] = (-3*mu[0]*mu[0]*mu[0]*mu[0] + 6*mu[0]*mu[1] - 4*mu[0]*mu[2] + mu[3])/(stat[1]*stat[1]*stat[1]*stat[1]) - 3;
-}
 
