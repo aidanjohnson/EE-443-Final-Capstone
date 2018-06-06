@@ -6,7 +6,6 @@ zcr: ZCR
 ss: SpectralSlope
 sv: SpectralVariation
 lpc: LPC
-lsf: LSF
 obsir: OBSIR
 scpb: SpectralCrestFactorPerBand
 sd: SpectralDecrease
